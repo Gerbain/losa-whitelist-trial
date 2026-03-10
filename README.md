@@ -55,8 +55,6 @@ Config.ServerName     = "YOUR SERVER NAME"              -- Shown in the NUI over
 | `GuildId` | Right-click your Discord server icon → Copy Server ID |
 | `BotToken` | [Discord Developer Portal](https://discord.com/developers/applications) → Your App → Bot → Token |
 
-> ⚠️ **Never commit your real `config.lua` to GitHub.** Add it to `.gitignore` and use `config.example.lua` instead.
-
 ### Bot setup
 
 1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
