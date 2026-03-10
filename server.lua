@@ -1,6 +1,7 @@
 local verifiedPlayers = {}
 local trialExpired    = {}
 local playerSpawned   = {}
+local trialStarted    = {}  -- guard: ensures trial thread only starts once per player
 
 -- -----------------------------------------------------------------------
 -- Webhook logger
@@ -158,6 +159,8 @@ end
 -- -----------------------------------------------------------------------
 RegisterNetEvent('discord_gate:playerReady', function()
     local src = source
+    if trialStarted[src] then return end  -- already started, ignore re-fires
+    trialStarted[src] = true
     playerSpawned[src] = true
 
     CreateThread(function()
@@ -252,6 +255,7 @@ AddEventHandler('playerDropped', function()
     verifiedPlayers[src .. "_logged"] = nil
     trialExpired[src]    = nil
     playerSpawned[src]   = nil
+    trialStarted[src]    = nil
 end)
 
 -- -----------------------------------------------------------------------
