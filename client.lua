@@ -76,3 +76,70 @@ AddEventHandler('baseevents:onPlayerDied', function()
         end)
     end
 end)
+
+-- -----------------------------------------------------------------------
+-- Staff: draw emoji marker above trial players' heads
+-- -----------------------------------------------------------------------
+local trialPlayerIds = {}
+local isStaff = false
+
+-- Check if we're staff on spawn
+AddEventHandler('playerSpawned', function()
+    TriggerServerEvent('discord_gate:requestSync')
+end)
+
+-- Receive updated trial list from server
+RegisterNetEvent('discord_gate:trialPlayers', function(list)
+    isStaff = true
+    trialPlayerIds = {}
+    for _, serverId in ipairs(list) do
+        trialPlayerIds[serverId] = true
+    end
+end)
+
+-- Draw loop — only runs if we received a staff sync
+CreateThread(function()
+    while true do
+        Wait(0)
+        if not isStaff or not Config.StaffMarkers then
+            Wait(5000)
+        else
+            for _, playerId in ipairs(GetActivePlayers()) do
+                local serverId = GetPlayerServerId(playerId)
+                if trialPlayerIds[serverId] and serverId ~= GetPlayerServerId(PlayerId()) then
+                    local ped = GetPlayerPed(playerId)
+                    if DoesEntityExist(ped) and not IsEntityDead(ped) then
+                        local pos = GetEntityCoords(ped)
+                        -- Draw above their head
+                        DrawMarker(
+                            2,              -- type: chevron pointing down
+                            pos.x, pos.y, pos.z + 2.2,
+                            0.0, 0.0, 0.0,  -- direction
+                            0.0, 180.0, 0.0, -- rotation (flip chevron to point down)
+                            0.4, 0.4, 0.4,  -- scale
+                            255, 165, 0, 180, -- orange, semi-transparent
+                            false, true, 2, false, nil, nil, false
+                        )
+
+                        -- Draw "TRIAL" text above the marker
+                        local camCoords = GetGameplayCamCoords()
+                        local dist = #(camCoords - pos)
+                        if dist < 20.0 then
+                            SetTextScale(0.0, 0.35)
+                            SetTextFont(4)
+                            SetTextColour(255, 165, 0, 255)
+                            SetTextOutline()
+                            SetTextEntry("STRING")
+                            AddTextComponentString("⏳ TRIAL")
+                            SetTextJustification(0)
+                            local x, y = World3dToScreen2d(pos.x, pos.y, pos.z + 2.75)
+                            if x and y then
+                                DrawText(x, y)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end)

@@ -44,3 +44,6 @@ Config.Logs = {
     no_role       = true,   -- trial expired, player has no role
     disconnected  = false,  -- player leaves (can be spammy, off by default)
 }
+
+-- Show a marker above trial players' heads (staff only, see README for setup)
+Config.StaffMarkers = true

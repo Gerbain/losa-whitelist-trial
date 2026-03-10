@@ -253,3 +253,46 @@ AddEventHandler('playerDropped', function()
     trialExpired[src]    = nil
     playerSpawned[src]   = nil
 end)
+
+-- -----------------------------------------------------------------------
+-- Staff sync — sends trial player ped IDs to admins only
+-- -----------------------------------------------------------------------
+local function SyncTrialPlayers()
+    local trialList = {}
+    for _, playerId in ipairs(GetPlayers()) do
+        local src = tonumber(playerId)
+        if playerSpawned[src] and verifiedPlayers[src] ~= true then
+            table.insert(trialList, src)
+        end
+    end
+
+    for _, playerId in ipairs(GetPlayers()) do
+        local src = tonumber(playerId)
+        if IsPlayerAceAllowed(src, "discord_gate.staff") then
+            TriggerClientEvent('discord_gate:trialPlayers', src, trialList)
+        end
+    end
+end
+
+-- Re-sync every 10 seconds to catch changes
+CreateThread(function()
+    while true do
+        Wait(10000)
+        SyncTrialPlayers()
+    end
+end)
+
+-- Also sync immediately when a player's status changes
+RegisterNetEvent('discord_gate:requestSync', function()
+    local src = source
+    if IsPlayerAceAllowed(src, "discord_gate.staff") then
+        local trialList = {}
+        for _, playerId in ipairs(GetPlayers()) do
+            local id = tonumber(playerId)
+            if playerSpawned[id] and verifiedPlayers[id] ~= true then
+                table.insert(trialList, id)
+            end
+        end
+        TriggerClientEvent('discord_gate:trialPlayers', src, trialList)
+    end
+end)
