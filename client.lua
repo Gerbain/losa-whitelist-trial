@@ -1,8 +1,12 @@
 local isLocked = false
 
 -- Tell the server we've actually spawned into the world (not just char select)
+-- Small wait ensures the server has fully registered the player before we fire
 AddEventHandler('playerSpawned', function()
-    TriggerServerEvent('discord_gate:playerReady')
+    CreateThread(function()
+        Wait(2000)
+        TriggerServerEvent('discord_gate:playerReady')
+    end)
 end)
 
 -- Show the gate UI

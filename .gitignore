@@ -1,0 +1,13 @@
+# Personal config with bot token, guild ID, role ID etc.
+config.lua
+
+# Persistent player database - contains Discord IDs and trial records
+losa_gate_players.json
+
+# OS clutter
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
