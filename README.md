@@ -1,4 +1,4 @@
-# fivem-trial-gate
+# losa-whitelist-trial
 
 > Give players a free trial on your FiveM server — lock them out after X minutes until they grab a role in your Discord.
 
@@ -27,8 +27,8 @@ Instead of a traditional whitelist, players can join and play freely for a confi
 
 ## Installation
 
-1. Download and drop the `losa-gate` folder into your `resources/` directory
-2. Add `ensure losa-gate` to your `server.cfg`
+1. Download and drop the `losa-whitelist-trial` folder into your `resources/` directory
+2. Add `ensure losa-whitelist-trial` to your `server.cfg`
 3. Copy `config.example.lua` to `config.lua` and fill in your values (see below)
 4. Restart your server
 
@@ -54,8 +54,6 @@ Config.ServerName     = "YOUR SERVER NAME"              -- Shown in the NUI over
 | `RequiredRoleId` | Discord → Server Settings → Roles → Right-click role → Copy ID |
 | `GuildId` | Right-click your Discord server icon → Copy Server ID |
 | `BotToken` | [Discord Developer Portal](https://discord.com/developers/applications) → Your App → Bot → Token |
-
-> ⚠️ **Never commit your real `config.lua` to GitHub.** Add it to `.gitignore` and use `config.example.lua` instead.
 
 ### Bot setup
 
